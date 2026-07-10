@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>피지뽑기 — oliveyoung SkinScan</title>
+<style>
+/* ── Design tokens ── */
+:root{
+  --rose:#D63870; --rose-lt:#F0609A; --plum:#9B48C0;
+  --teal:#2AA8A0; --teal-lt:#4ABFB8; --green:#3BAF6A;
+  --danger:#D63870;
+  --surface:rgba(255,249,254,0.93); --surface-2:rgba(255,242,250,0.72);
+  --bg:#FFFFFF; --bg2:#FDF8FC;
+  --text:#1C0714; --sub:#8C6278;
+  --div:rgba(214,56,112,0.1); --sh:rgba(214,56,112,0.08);
+  --r-lg:24px; --r-md:14px; --r-sm:10px;
+}
+
+/* ── Reset ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;user-select:none}
+body{
+  font-family:'Apple SD Gothic Neo','Noto Sans KR',-apple-system,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  background-color:#FEE9F2;
+  background-image:
+    radial-gradient(ellipse 80% 55% at 15% 8%, #FFD6EC 0%, transparent 65%),
+    radial-gradient(ellipse 65% 55% at 85% 18%, #EDDCFF 0%, transparent 60%),
+    radial-gradient(ellipse 70% 55% at 45% 95%, #FFD0E6 0%, transparent 65%);
+  display:flex;justify-content:center;min-height:100vh;
+}
+.phone{
+  width:100%;max-width:390px;
+  height:100vh;height:100dvh;
+  background:var(--bg);overflow:hidden;position:relative;
+  box-shadow:0 0 0 1px rgba(214,56,112,0.1),0 8px 48px rgba(214,56,112,0.15);
+}
+.screen{display:none;flex-direction:column;height:100%}
+.screen.active{display:flex}
+
+/* ── Header ── */
+.hdr{
+  background:var(--surface);
+  backdrop-filter:blur(18px) saturate(1.5);
+  -webkit-backdrop-filter:blur(18px) saturate(1.5);
+  padding:12px 16px;
+  display:flex;align-items:center;gap:8px;
+  border-bottom:1px solid var(--div);
+  position:sticky;top:0;z-index:10;flex-shrink:0;
+}
+.hdr-back{
+  width:32px;height:32px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:var(--text);font-size:18px;
+  border:1px solid var(--div);border-radius:8px;background:var(--surface-2);
+}
+.hdr-title{font-size:13px;color:var(--sub);flex:1;font-weight:600}
+.hdr-icons{display:flex;gap:16px;color:var(--div);font-size:17px}
+
+/* ── Buttons ── */
+.btn{
+  border:none;border-radius:var(--r-md);padding:16px 20px;
+  font-size:15px;font-weight:800;cursor:pointer;width:100%;
+  letter-spacing:-0.3px;transition:transform 0.12s,box-shadow 0.12s;
+}
+.btn:active{transform:scale(0.97) translateY(1px)}
+.btn-dark{
+  background:linear-gradient(135deg,var(--rose-lt) 0%,var(--rose) 55%,var(--plum) 100%);
+  color:white;box-shadow:0 8px 28px rgba(214,56,112,0.35);
+}
+.btn-dark:active{box-shadow:0 4px 14px rgba(214,56,112,0.25)}
+.btn-green{
+  background:linear-gradient(135deg,#5CC87E,var(--green));
+  color:white;box-shadow:0 6px 20px rgba(59,175,106,0.3);
+}
+
+.bottom-cta{
+  padding:14px 20px calc(16px + env(safe-area-inset-bottom));
+  background:var(--surface);backdrop-filter:blur(12px);
+  border-top:1px solid var(--div);flex-shrink:0;
+}
+.bottom-hint{text-align:center;font-size:11px;color:var(--sub);margin-top:7px}
+
+/* ── INTRO ── */
+.intro-body{flex:1;overflow-y:auto}
+.skin-hero{
+  background:linear-gradient(160deg,#FFF0F8 0%,#F8EEFF 100%);
+  padding:24px 20px 0;text-align:center;
+  border-bottom:1px solid var(--div);
+}
+.skin-eyebrow{font-size:11px;color:var(--sub);margin-bottom:5px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase}
+.skin-name{font-size:28px;font-weight:900;color:var(--text);letter-spacing:-1.5px}
+.skin-sphere-wrap{display:flex;justify-content:center;padding:20px 0 24px}
+.skin-sphere{
+  width:96px;height:96px;border-radius:50%;
+  background:radial-gradient(ellipse at 38% 32%,#FFE8CC 0%,#F0C09A 45%,#D8906A 100%);
+  box-shadow:inset -10px -10px 18px rgba(140,70,20,.22),
+             inset 6px 6px 12px rgba(255,240,215,.45),
+             0 8px 28px rgba(214,56,112,0.2);
+}
+.info-section{background:var(--bg);border-top:6px solid var(--bg2);padding:16px 20px}
+.section-head{display:flex;justify-content:space-between;align-items:center;cursor:pointer;padding-bottom:4px}
+.section-title{font-size:10px;font-weight:800;color:var(--sub);letter-spacing:1.5px;text-transform:uppercase}
+.section-toggle{font-size:14px;color:var(--sub);transition:transform .2s}
+.info-row{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid var(--div)}
+.info-row:last-child{border-bottom:none}
+.info-key{font-size:13px;color:var(--sub)}
+.info-val{font-size:13px;font-weight:700;color:var(--text)}
+.info-val.hl{color:var(--green);font-weight:800}
+.care-section{background:var(--bg);border-top:6px solid var(--bg2);padding:16px 20px}
+.care-eyebrow{font-size:10px;font-weight:800;color:var(--sub);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px}
+.care-main-title{font-size:15px;font-weight:800;color:var(--text);margin-bottom:14px;letter-spacing:-0.5px}
+.care-grid{display:flex;gap:10px}
+.care-card{flex:1;border-radius:16px;padding:14px}
+.care-card.danger{background:linear-gradient(135deg,#FFF0F5,#FFE8F0)}
+.care-card.mild{background:linear-gradient(135deg,#F0FAF8,#E4F7F5)}
+.care-badge{display:inline-block;font-size:10px;font-weight:800;padding:3px 9px;border-radius:20px;margin-bottom:9px;letter-spacing:.3px}
+.care-card.danger .care-badge{background:rgba(214,56,112,0.12);color:var(--rose)}
+.care-card.mild .care-badge{background:rgba(42,168,160,0.14);color:var(--teal)}
+.care-card-name{font-size:14px;font-weight:900;color:var(--text);margin-bottom:3px}
+.care-card-desc{font-size:11px;color:var(--sub);line-height:1.55}
+.care-card-icon{font-size:22px;float:right}
+.zone-bar-row{display:flex;align-items:center;gap:10px;margin-bottom:11px}
+.zone-bar-row:last-child{margin-bottom:0}
+.zone-nm{font-size:12px;color:var(--sub);width:28px;flex-shrink:0}
+.zone-track{flex:1;height:6px;background:rgba(214,56,112,0.08);border-radius:3px;overflow:hidden}
+.zone-fill{height:100%;border-radius:3px}
+.zone-lv{font-size:11px;font-weight:800;width:52px;text-align:right;flex-shrink:0}
+.cta-links{background:var(--bg);border-top:6px solid var(--bg2);display:flex;flex-direction:column}
+.cta-link{display:flex;align-items:center;gap:12px;padding:15px 20px;border-bottom:1px solid var(--div);cursor:pointer}
+.cta-link:last-child{border-bottom:none}
+.cta-icon{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.cta-icon.green{background:rgba(59,175,106,0.12)}
+.cta-icon.blue{background:rgba(155,72,192,0.12)}
+.cta-link-title{font-size:13px;font-weight:700;color:var(--text)}
+.cta-link-sub{font-size:12px;color:var(--sub);margin-top:1px}
+.cta-arr{color:rgba(214,56,112,0.3);font-size:18px;margin-left:auto}
+
+/* ── GAME SCREEN ── */
+#gameScreen{background:var(--bg2)}
+.stage-bar{
+  background:var(--surface);backdrop-filter:blur(12px);
+  padding:9px 20px;display:flex;align-items:center;gap:12px;
+  border-bottom:1px solid var(--div);flex-shrink:0;
+}
+.stage-steps{display:flex;gap:5px;flex:1;align-items:center}
+.stage-step{
+  flex:1;height:6px;border-radius:3px;
+  background:rgba(214,56,112,0.1);
+  transition:background .4s ease,transform .3s ease;
+}
+.stage-step.done{background:var(--green)}
+.stage-step.active{background:var(--rose);box-shadow:0 0 8px rgba(214,56,112,0.4)}
+.stage-label{font-size:11px;font-weight:800;color:var(--sub);white-space:nowrap;letter-spacing:.3px}
+.game-hud{
+  background:var(--surface);backdrop-filter:blur(12px);
+  padding:8px 16px;display:flex;justify-content:space-between;align-items:center;
+  border-bottom:1px solid var(--div);flex-shrink:0;gap:8px;
+}
+.hud-blk{
+  text-align:center;background:var(--surface-2);
+  border:1px solid var(--div);border-radius:var(--r-sm);
+  padding:5px 10px;min-width:80px;
+}
+.hud-lbl{font-size:8px;font-weight:800;color:var(--sub);letter-spacing:2px;text-transform:uppercase;display:block;margin-bottom:1px}
+.hud-val{font-size:22px;font-weight:900;color:var(--text);letter-spacing:-1px;line-height:1;font-variant-numeric:tabular-nums}
+.hud-val.green{color:var(--green)}
+.hud-val.red{color:var(--danger);animation:blink .4s alternate infinite}
+@keyframes blink{to{opacity:.3}}
+.timer-track{height:3px;background:var(--div);flex-shrink:0}
+.timer-fill{height:100%;transition:width .9s linear,background .5s;background:var(--green)}
+#canvasWrap{flex:1;display:flex;align-items:center;justify-content:center;padding:12px;position:relative;overflow:hidden}
+#faceCanvas{touch-action:none;cursor:pointer;border-radius:20px}
+.game-hint-bar{
+  position:absolute;bottom:0;left:0;right:0;text-align:center;padding:8px 20px 16px;
+  pointer-events:none;background:linear-gradient(transparent,rgba(253,248,252,.94));
+}
+#gameHint{font-size:13px;color:var(--sub);font-weight:700}
+
+/* Stage overlays */
+.stage-overlay{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:rgba(255,249,254,0.97);backdrop-filter:blur(4px);
+  z-index:20;gap:14px;transition:opacity .3s ease;border-radius:20px;
+}
+.stage-overlay.hidden{opacity:0;pointer-events:none}
+.ov-icon{font-size:52px;line-height:1}
+.ov-stage-num{font-size:10px;font-weight:800;color:var(--sub);letter-spacing:2px;text-transform:uppercase}
+.ov-title{font-size:26px;font-weight:900;color:var(--text);letter-spacing:-1px}
+.ov-desc{font-size:14px;color:var(--sub);text-align:center;padding:0 32px;line-height:1.7}
+.ov-countdown{
+  font-size:72px;font-weight:900;color:var(--rose);letter-spacing:-4px;
+  font-variant-numeric:tabular-nums;animation:pop .9s ease-out forwards;
+}
+@keyframes pop{0%{transform:scale(.3);opacity:.3}40%{transform:scale(1.2)}100%{transform:scale(1);opacity:1}}
+.ov-btn{
+  padding:15px 44px;border-radius:30px;font-size:15px;font-weight:800;
+  border:none;cursor:pointer;letter-spacing:-0.3px;transition:transform .1s;
+  background:linear-gradient(135deg,var(--rose-lt),var(--rose),var(--plum));
+  color:white;box-shadow:0 8px 24px rgba(214,56,112,0.32);
+}
+.ov-btn:active{transform:scale(.96)}
+.ov-btn.green-btn{background:linear-gradient(135deg,#5CC87E,var(--green));box-shadow:0 8px 24px rgba(59,175,106,0.3)}
+.ov-btn.outline{background:transparent;border:2px solid rgba(214,56,112,0.3);color:var(--rose);box-shadow:none}
+.fail-msg{font-size:14px;color:var(--sub);text-align:center}
+
+/* VFX */
+.score-pop{position:fixed;pointer-events:none;z-index:99;font-size:16px;font-weight:900;color:var(--rose);animation:sfloat .85s ease-out forwards}
+@keyframes sfloat{to{transform:translateY(-44px);opacity:0}}
+
+/* ── COUPON SCREEN ── */
+#couponScreen{background:linear-gradient(160deg,#FFF0F8 0%,#F8F4FF 50%,#EDF8F6 100%)}
+.coupon-body{flex:1;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:32px 24px 24px;gap:0}
+.coupon-emoji{
+  font-size:72px;line-height:1;margin-bottom:16px;
+  animation:floatBounce 1.4s ease-in-out infinite alternate;
+  filter:drop-shadow(0 4px 12px rgba(214,56,112,0.25));
+}
+@keyframes floatBounce{to{transform:translateY(-12px)}}
+.coupon-headline{font-size:26px;font-weight:900;color:var(--text);letter-spacing:-1.5px;text-align:center;margin-bottom:6px}
+.coupon-sub{font-size:14px;color:var(--sub);text-align:center;line-height:1.7;margin-bottom:28px}
+.coupon-card{
+  background:white;border-radius:22px;width:100%;
+  box-shadow:0 12px 40px rgba(214,56,112,0.14),0 2px 8px rgba(0,0,0,0.04);
+  overflow:hidden;margin-bottom:24px;
+  border:1px solid rgba(255,255,255,0.8);
+}
+.coupon-top{
+  background:linear-gradient(135deg,#1C0714 0%,#2D1030 60%,#1C1040 100%);
+  padding:24px 24px 20px;position:relative;overflow:hidden;
+}
+.coupon-top::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 120% 80% at 80% 20%,rgba(214,56,112,0.28) 0%,transparent 60%),
+             radial-gradient(ellipse 80% 60% at 20% 80%,rgba(155,72,192,0.22) 0%,transparent 60%);
+}
+.coupon-brand{font-size:10px;font-weight:900;letter-spacing:3px;color:rgba(255,255,255,.5);margin-bottom:8px;position:relative}
+.coupon-title{font-size:20px;font-weight:900;color:white;letter-spacing:-.5px;position:relative;line-height:1.3}
+.coupon-value{font-size:13px;color:rgba(255,255,255,.6);margin-top:6px;position:relative}
+.coupon-stars{position:absolute;top:12px;right:16px;font-size:36px;opacity:.12;line-height:1}
+.coupon-dot-row{display:flex;margin:0 -1px;align-items:center}
+.coupon-dot{width:22px;height:22px;border-radius:50%;background:#F8F4FF;flex-shrink:0}
+.coupon-dash{flex:1;border-top:2px dashed rgba(214,56,112,0.15)}
+.coupon-bottom{padding:18px 24px 22px}
+.coupon-code-label{font-size:10px;font-weight:800;color:var(--sub);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px}
+.coupon-code{font-size:22px;font-weight:900;color:var(--rose);letter-spacing:5px;font-variant-numeric:tabular-nums}
+.coupon-expiry{font-size:12px;color:var(--sub);margin-top:8px}
+.score-summary{
+  background:white;border-radius:16px;width:100%;padding:16px;
+  display:flex;gap:0;box-shadow:0 4px 16px rgba(214,56,112,0.08);
+  margin-bottom:16px;border:1px solid rgba(214,56,112,0.08);
+}
+.score-item{flex:1;text-align:center;border-right:1px solid var(--div)}
+.score-item:last-child{border-right:none}
+.score-num{font-size:24px;font-weight:900;color:var(--text);font-variant-numeric:tabular-nums;letter-spacing:-1px}
+.score-lbl{font-size:11px;color:var(--sub);margin-top:3px;font-weight:700}
+.product-reco{width:100%;margin-bottom:24px}
+.reco-label{font-size:13px;font-weight:800;color:var(--text);margin-bottom:12px}
+.product-scroll{display:flex;gap:12px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+.product-scroll::-webkit-scrollbar{display:none}
+.product-card{
+  min-width:118px;flex-shrink:0;background:white;border-radius:16px;overflow:hidden;
+  box-shadow:0 4px 16px rgba(214,56,112,0.09);border:1px solid rgba(214,56,112,0.07);
+}
+.product-thumb{
+  width:118px;height:108px;
+  background:linear-gradient(145deg,#FFF0F8,#F8EEFF);
+  display:flex;align-items:center;justify-content:center;font-size:36px;
+}
+.product-body{padding:10px}
+.product-brand{font-size:9px;color:var(--sub);font-weight:800;letter-spacing:1px;text-transform:uppercase}
+.product-name{font-size:11px;font-weight:700;color:var(--text);margin-top:3px;line-height:1.4}
+.product-price{font-size:12px;font-weight:900;color:var(--rose);margin-top:5px}
+</style>
+
+<div class="phone">
+
+<!-- ══ INTRO SCREEN ══ -->
+<div class="screen active" id="introScreen">
+  <div class="hdr">
+    <button class="hdr-back">←</button>
+    <span class="hdr-title">2026. 7. 9 진단 결과</span>
+    <div class="hdr-icons"><span>☰</span><span>⌂</span></div>
+  </div>
+  <div class="intro-body">
+    <div class="skin-hero">
+      <p class="skin-eyebrow">내 피부타입은</p>
+      <p class="skin-name">지성이에요</p>
+      <div class="skin-sphere-wrap"><div class="skin-sphere"></div></div>
+    </div>
+    <div class="info-section">
+      <div class="section-head" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'':'none';this.querySelector('.section-toggle').style.transform=this.nextElementSibling.style.display===''?'':'rotate(180deg)'">
+        <span class="section-title">내 진단 정보</span>
+        <span class="section-toggle">∧</span>
+      </div>
+      <div>
+        <div class="info-row"><span class="info-key">진단일</span><span class="info-val">2026년 7월 9일</span></div>
+        <div class="info-row"><span class="info-key">진단 방식</span><span class="info-val">모바일 진단</span></div>
+        <div class="info-row"><span class="info-key">재진단 권장일</span><span class="info-val hl">2026년 8월 8일</span></div>
+      </div>
+    </div>
+    <div class="care-section">
+      <p class="care-eyebrow">케어 필요 항목</p>
+      <p class="care-main-title">이번 진단에서 가장 관리가 필요한 항목이에요</p>
+      <div class="care-grid">
+        <div class="care-card danger"><span class="care-card-icon">🌋</span><div class="care-badge">주의</div><div class="care-card-name">피지·모공</div><div class="care-card-desc">집중 관리가<br>필요해요</div></div>
+        <div class="care-card mild"><span class="care-card-icon">💧</span><div class="care-badge">유의</div><div class="care-card-name">수분감</div><div class="care-card-desc">꾸준하게 유지<br>관리해요</div></div>
+      </div>
+    </div>
+    <div style="background:var(--bg);border-top:6px solid var(--bg2);padding:16px 20px">
+      <p style="font-size:15px;font-weight:800;color:var(--text);margin-bottom:14px;letter-spacing:-.5px">진단 기반 피지 분포</p>
+      <div class="zone-bar-row"><span class="zone-nm">이마</span><div class="zone-track"><div class="zone-fill" style="width:74%;background:linear-gradient(90deg,#3BAF6A,#F5C842)"></div></div><span class="zone-lv" style="color:#C07800">높음</span></div>
+      <div class="zone-bar-row"><span class="zone-nm">코</span><div class="zone-track"><div class="zone-fill" style="width:96%;background:linear-gradient(90deg,#3BAF6A,#D63870)"></div></div><span class="zone-lv" style="color:#D63870">매우 높음</span></div>
+      <div class="zone-bar-row"><span class="zone-nm">볼</span><div class="zone-track"><div class="zone-fill" style="width:38%;background:#3BAF6A"></div></div><span class="zone-lv" style="color:#3BAF6A">낮음</span></div>
+      <div class="zone-bar-row"><span class="zone-nm">턱</span><div class="zone-track"><div class="zone-fill" style="width:55%;background:linear-gradient(90deg,#3BAF6A,#F5C842)"></div></div><span class="zone-lv" style="color:#C07800">보통</span></div>
+    </div>
+    <div class="cta-links">
+      <div class="cta-link"><div class="cta-icon green">📲</div><div style="flex:1"><div class="cta-link-title">친구랑 같이 스킨스캔 해보기</div><div class="cta-link-sub">계절마다 달라지는 피부 타입을 공유해요</div></div><span class="cta-arr">›</span></div>
+      <div class="cta-link"><div class="cta-icon blue">💬</div><div style="flex:1"><div class="cta-link-title">올리브영의 스킨스캔은 어떤가요?</div><div class="cta-link-sub">의견 보내기</div></div><span class="cta-arr">›</span></div>
+    </div>
+    <div style="height:10px"></div>
+  </div>
+  <div class="bottom-cta">
+    <button class="btn btn-dark" onclick="enterGame()">🎮 스킨케어 게임 시작하기</button>
+    <p class="bottom-hint">3단계 미션 완료 시 쿠폰 지급!</p>
+  </div>
+</div>
+
+<!-- ══ GAME SCREEN ══ -->
+<div class="screen" id="gameScreen">
+  <div class="hdr">
+    <button class="hdr-back" onclick="showScreen('introScreen')">←</button>
+    <span class="hdr-title" id="gameHdrTitle">스테이지 1 / 3</span>
+  </div>
+  <div class="stage-bar">
+    <div class="stage-steps">
+      <div class="stage-step active" id="step1"></div>
+      <div class="stage-step" id="step2"></div>
+      <div class="stage-step" id="step3"></div>
+    </div>
+    <span class="stage-label" id="stageLabel">피지 뽑기</span>
+  </div>
+  <div class="game-hud">
+    <div class="hud-blk"><span class="hud-lbl">SCORE</span><div class="hud-val" id="scoreDisplay">0</div></div>
+    <div class="hud-blk"><span class="hud-lbl">PROGRESS</span><div class="hud-val green" id="progressDisplay">0/0</div></div>
+    <div class="hud-blk"><span class="hud-lbl">TIME</span><div class="hud-val" id="timerDisplay">30</div></div>
+  </div>
+  <div class="timer-track"><div class="timer-fill" id="timerFill" style="width:100%"></div></div>
+  <div id="canvasWrap">
+    <canvas id="faceCanvas" touch-action="none"></canvas>
+    <div class="game-hint-bar"><p id="gameHint"></p></div>
+    <div class="stage-overlay" id="stageIntroOv">
+      <div class="ov-icon" id="ovIcon"></div>
+      <div class="ov-stage-num" id="ovNum"></div>
+      <div class="ov-title" id="ovTitle"></div>
+      <div class="ov-desc" id="ovDesc"></div>
+      <button class="ov-btn" id="ovStartBtn" onclick="startCountdown()">시작하기</button>
+    </div>
+    <div class="stage-overlay hidden" id="countdownOv">
+      <div class="ov-countdown" id="countNum">3</div>
+    </div>
+    <div class="stage-overlay hidden" id="stageClearOv">
+      <div class="ov-icon">🎉</div>
+      <div class="ov-title" id="clearTitle">스테이지 클리어!</div>
+      <div class="fail-msg" id="clearScore"></div>
+      <button class="ov-btn green-btn" id="clearBtn" onclick="nextStage()">다음 스테이지 →</button>
+    </div>
+    <div class="stage-overlay hidden" id="failOv">
+      <div class="ov-icon">⏰</div>
+      <div class="ov-title">시간 초과!</div>
+      <div class="fail-msg">조금만 더 빠르게 해봐요</div>
+      <button class="ov-btn" onclick="retryStage()">다시 도전</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ COUPON SCREEN ══ -->
+<div class="screen" id="couponScreen">
+  <div class="hdr">
+    <button class="hdr-back" onclick="showScreen('introScreen')">←</button>
+    <span class="hdr-title">스킨케어 완료</span>
+  </div>
+  <div class="coupon-body">
+    <div class="coupon-emoji">🌿</div>
+    <p class="coupon-headline">피부 케어 완성!</p>
+    <p class="coupon-sub">3단계 스킨케어 미션을 완료했어요.<br>특별 할인 쿠폰을 드려요!</p>
+    <div class="coupon-card">
+      <div class="coupon-top">
+        <div class="coupon-stars">✦</div>
+        <div class="coupon-brand">OLIVEYOUNG</div>
+        <div class="coupon-title">모공 케어 세트 20% 할인</div>
+        <div class="coupon-value">스킨스캔 게임 완료 보상</div>
+      </div>
+      <div class="coupon-dot-row">
+        <div class="coupon-dot"></div>
+        <div class="coupon-dash"></div>
+        <div class="coupon-dot"></div>
+      </div>
+      <div class="coupon-bottom">
+        <div class="coupon-code-label">쿠폰 코드</div>
+        <div class="coupon-code">SKIN-0710</div>
+        <div class="coupon-expiry">유효기간: 2026년 8월 10일까지 · 최대 5,000원 할인</div>
+      </div>
+    </div>
+    <div class="score-summary">
+      <div class="score-item"><div class="score-num" id="finalTotalScore">0</div><div class="score-lbl">총 점수</div></div>
+      <div class="score-item"><div class="score-num">3</div><div class="score-lbl">완료 스테이지</div></div>
+      <div class="score-item"><div class="score-num" id="finalGrade">A</div><div class="score-lbl">등급</div></div>
+    </div>
+    <div class="product-reco">
+      <div class="reco-label">🧴 추천 케어 제품</div>
+      <div class="product-scroll">
+        <div class="product-card"><div class="product-thumb">🫙</div><div class="product-body"><div class="product-brand">COSRX</div><div class="product-name">BHA 블랙헤드 파워 리퀴드</div><div class="product-price">18,000원</div></div></div>
+        <div class="product-card"><div class="product-thumb">🧴</div><div class="product-body"><div class="product-brand">SOME BY MI</div><div class="product-name">AHA·BHA 30일 세럼</div><div class="product-price">16,900원</div></div></div>
+        <div class="product-card"><div class="product-thumb">🌋</div><div class="product-body"><div class="product-brand">innisfree</div><div class="product-name">화산송이 모공 마스크</div><div class="product-price">4,500원</div></div></div>
+        <div class="product-card"><div class="product-thumb">✨</div><div class="product-body"><div class="product-brand">Laneige</div><div class="product-name">워터뱅크 블루 히알루론 세럼</div><div class="product-price">38,000원</div></div></div>
+      </div>
+    </div>
+    <button class="btn btn-dark" style="margin-bottom:10px">🛒 쿠폰으로 제품 구매하기</button>
+    <button class="btn" style="background:var(--bg2);color:var(--text);border:1px solid var(--div)" onclick="enterGame()">🔄 다시 플레이</button>
+    <div style="height:20px"></div>
+  </div>
+</div>
+
+</div><!-- .phone -->
+
+<script>
+// ─── State ───
+let stage=1, score=0, totalScore=0;
+let timeLeft=30, timerIV=null, rafId=null;
+let gameActive=false, stageScore=0;
+
+const STAGE_CFG={
+  1:{name:'피지 뽑기',icon:'🌋',desc:'T존에 몰린 피지를 모두\n꾹 눌러 뽑아봐요!',time:30,hint:'피지를 탭해서 뽑아봐요!',color:'#D63870'},
+  2:{name:'세럼 바르기',icon:'💧',desc:'얼굴을 탭하거나 드래그해서\n세럼을 온 얼굴에 펴발라봐요!',time:25,hint:'탭·드래그로 세럼을 발라봐요!',color:'#2AA8A0'},
+  3:{name:'진정 팩 올리기',icon:'🩹',desc:'마스크팩을 잡아서\n얼굴 위로 올려봐요!',time:20,hint:'팩을 드래그해서 얼굴에 올려봐요!',color:'#9B48C0'},
+};
+
+// ─── Canvas ───
+let canvas, ctx, CW, CH;
+function setupCanvas(){
+  canvas=document.getElementById('faceCanvas');
+  const wrap=document.getElementById('canvasWrap');
+  const rect=wrap.getBoundingClientRect();
+  const size=Math.min(rect.width-24,rect.height-60,310);
+  CW=CH=size; canvas.width=CW; canvas.height=CH;
+  canvas.style.width=CW+'px'; canvas.style.height=CH+'px';
+  ctx=canvas.getContext('2d');
+}
+
+// ─── Face ───
+function drawFace(clean=false,maskProgress=0){
+  const sg=ctx.createRadialGradient(CW*.5,CH*.42,8,CW*.5,CH*.42,CW*.52);
+  sg.addColorStop(0,clean?'#FFE8D4':'#FFCBA4');
+  sg.addColorStop(1,clean?'#F5C5A0':'#F0C090');
+  ctx.beginPath(); ctx.ellipse(CW*.5,CH*.44,CW*.44,CH*.46,0,0,Math.PI*2);
+  ctx.fillStyle=sg; ctx.fill();
+  ctx.beginPath(); ctx.ellipse(CW*.5,CH*.1,CW*.43,CH*.18,0,Math.PI,Math.PI*2);
+  ctx.fillStyle='#1A1A1A'; ctx.fill();
+  [[CW*.27,CH*.52,-.3],[CW*.73,CH*.52,.3]].forEach(([bx,by,r])=>{
+    const bg=ctx.createRadialGradient(bx,by,0,bx,by,26);
+    bg.addColorStop(0,'rgba(255,148,168,.24)'); bg.addColorStop(1,'transparent');
+    ctx.fillStyle=bg; ctx.beginPath(); ctx.ellipse(bx,by,26,16,r,0,Math.PI*2); ctx.fill();
+  });
+  [[CW*.35,CH*.37],[CW*.65,CH*.37]].forEach(([ex,ey])=>{
+    ctx.beginPath(); ctx.ellipse(ex,ey,12,7.5,0,0,Math.PI*2); ctx.fillStyle='white'; ctx.fill();
+    ctx.beginPath(); ctx.ellipse(ex,ey,7,7.5,0,0,Math.PI*2); ctx.fillStyle='#1A1A1A'; ctx.fill();
+    ctx.beginPath(); ctx.ellipse(ex+3,ey-2,2,2.5,0,0,Math.PI*2); ctx.fillStyle='white'; ctx.fill();
+  });
+  ctx.beginPath(); ctx.moveTo(CW*.39,CH*.67);
+  ctx.quadraticCurveTo(CW*.5,clean?CH*.76:CH*.71,CW*.61,CH*.67);
+  ctx.lineWidth=2; ctx.strokeStyle='rgba(180,80,80,.7)'; ctx.stroke();
+  const hl=ctx.createRadialGradient(CW*.36,CH*.26,0,CW*.36,CH*.26,38);
+  hl.addColorStop(0,`rgba(255,255,255,${clean?.65:.22})`); hl.addColorStop(1,'transparent');
+  ctx.fillStyle=hl; ctx.beginPath(); ctx.ellipse(CW*.36,CH*.26,30,20,-.4,0,Math.PI*2); ctx.fill();
+  if(maskProgress>0){
+    ctx.save();
+    ctx.beginPath(); ctx.ellipse(CW*.5,CH*.44,CW*.44,CH*.46,0,0,Math.PI*2); ctx.clip();
+    ctx.fillStyle=`rgba(240,248,255,${Math.min(maskProgress*.7,.65)})`;
+    ctx.fillRect(0,0,CW,CH); ctx.restore();
+  }
+  if(clean){
+    ctx.font='12px serif'; ctx.fillStyle='rgba(0,0,0,.5)';
+    ctx.fillText('✨',CW*.08,CH*.28); ctx.fillText('✨',CW*.8,CH*.2);
+  }
+}
+
+// ─── Stage 1: Pore extraction ───
+let pores=[];
+const ZONES_2D=[
+  {cx:.50,cy:.26,rx:.20,ry:.10,n:8,sz:[5,11]},
+  {cx:.50,cy:.46,rx:.08,ry:.08,n:5,sz:[6,11]},
+  {cx:.50,cy:.57,rx:.10,ry:.09,n:8,sz:[7,13]},
+  {cx:.50,cy:.70,rx:.08,ry:.05,n:3,sz:[5,9]},
+  {cx:.28,cy:.52,rx:.09,ry:.08,n:3,sz:[3,6]},
+  {cx:.72,cy:.52,rx:.09,ry:.08,n:3,sz:[3,6]},
+  {cx:.50,cy:.80,rx:.13,ry:.05,n:4,sz:[4,8]},
+];
+function buildPores(){
+  pores=[];
+  const cols=['#F5C842','#F0B830','#FAD060','#E8B010','#F2CA55'];
+  ZONES_2D.forEach(z=>{
+    for(let i=0;i<z.n;i++){
+      const a=Math.random()*Math.PI*2,rr=Math.sqrt(Math.random());
+      pores.push({x:z.cx*CW+Math.cos(a)*z.rx*CW*rr,y:z.cy*CH+Math.sin(a)*z.ry*CH*rr,
+        r:z.sz[0]+Math.random()*(z.sz[1]-z.sz[0]),color:cols[~~(Math.random()*cols.length)],
+        popped:false,extracting:false,extractStart:0,phase:Math.random()*Math.PI*2});
+    }
+  });
+}
+function drawPore(p){
+  if(p.popped) return;
+  if(p.extracting){ drawExtraction(p); return; }
+  const pulse=1+Math.sin(Date.now()*.004+p.phase)*.12,r=p.r*pulse;
+  const glow=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,r*2.5);
+  glow.addColorStop(0,'rgba(245,200,66,.2)'); glow.addColorStop(1,'transparent');
+  ctx.fillStyle=glow; ctx.beginPath(); ctx.arc(p.x,p.y,r*2.5,0,Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(p.x,p.y,r*1.1,0,Math.PI*2); ctx.fillStyle='rgba(80,45,12,.4)'; ctx.fill();
+  const sg=ctx.createRadialGradient(p.x-r*.2,p.y-r*.2,0,p.x,p.y,r);
+  sg.addColorStop(0,'#FFF9C4'); sg.addColorStop(.5,p.color); sg.addColorStop(1,'#B87820');
+  ctx.fillStyle=sg; ctx.beginPath(); ctx.arc(p.x,p.y,r,0,Math.PI*2); ctx.fill();
+}
+function drawExtraction(p){
+  const el=Date.now()-p.extractStart;
+  if(el<320){
+    const t=el/320,ease=t<.5?2*t*t:-1+(4-2*t)*t;
+    const plugH=p.r*3*ease,plugW=p.r*.7,sy=p.y-p.r;
+    const pg=ctx.createLinearGradient(p.x-plugW,sy-plugH,p.x+plugW,sy);
+    pg.addColorStop(0,'#FFF9C4'); pg.addColorStop(.4,'#E8C090'); pg.addColorStop(1,'#C8956A');
+    ctx.fillStyle=pg; ctx.beginPath();
+    ctx.moveTo(p.x-plugW,sy); ctx.lineTo(p.x-plugW*.6,sy-plugH);
+    ctx.quadraticCurveTo(p.x,sy-plugH-p.r*.5,p.x+plugW*.6,sy-plugH);
+    ctx.lineTo(p.x+plugW,sy); ctx.closePath(); ctx.fill();
+    ctx.beginPath(); ctx.arc(p.x,p.y,p.r*.5,0,Math.PI*2); ctx.fillStyle='rgba(100,55,20,.4)'; ctx.fill();
+  } else if(el<700){
+    const t=(el-320)/380,dropY=p.y-p.r-p.r*3-t*p.r*5;
+    ctx.globalAlpha=1-t;
+    const pg=ctx.createLinearGradient(p.x-p.r*.7,dropY-p.r*3,p.x+p.r*.7,dropY);
+    pg.addColorStop(0,'#FFF9C4'); pg.addColorStop(.5,'#E8C090'); pg.addColorStop(1,'#C8956A');
+    ctx.fillStyle=pg; ctx.beginPath();
+    ctx.moveTo(p.x-p.r*.7,dropY); ctx.lineTo(p.x-p.r*.42,dropY-p.r*3);
+    ctx.quadraticCurveTo(p.x,dropY-p.r*3.5,p.x+p.r*.42,dropY-p.r*3);
+    ctx.lineTo(p.x+p.r*.7,dropY); ctx.closePath(); ctx.fill();
+    ctx.globalAlpha=1;
+    ctx.beginPath(); ctx.arc(p.x,p.y,p.r*.45,0,Math.PI*2); ctx.fillStyle='rgba(100,55,20,.3)'; ctx.fill();
+  } else { p.extracting=false; p.popped=true; }
+}
+function tapPore(x,y){
+  for(const p of pores){
+    if(p.popped||p.extracting) continue;
+    if(Math.hypot(x-p.x,y-p.y)>p.r*2.5) continue;
+    p.extracting=true; p.extractStart=Date.now();
+    addScore(Math.ceil(p.r/3));
+    if(navigator.vibrate) navigator.vibrate(22);
+    setTimeout(()=>{ checkStage1Clear(); },750);
+    break;
+  }
+}
+function checkStage1Clear(){ if(pores.every(p=>p.popped)) stageClear(); }
+
+// ─── Stage 2: Serum spread ───
+let serumCvs,serumCtx2,serumRipples=[],serumCoverage=0,coverFrame=0,lastDragT=0;
+function buildSerum(){
+  serumCvs=document.createElement('canvas');
+  serumCvs.width=CW; serumCvs.height=CH;
+  serumCtx2=serumCvs.getContext('2d');
+  serumRipples=[]; serumCoverage=0; coverFrame=0; lastDragT=0;
+}
+function spawnSerumAt(x,y,isDrag){
+  const fcx=CW*.5,fcy=CH*.44,frx=CW*.44,fry=CH*.46;
+  if(((x-fcx)/frx)**2+((y-fcy)/fry)**2>1) return false;
+  const maxR=isDrag?CW*.28:CW*.42,dur=isDrag?900:1300;
+  serumRipples.push({x,y,prevR:0,maxR,start:Date.now(),duration:dur});
+  if(!isDrag){ addScore(4); if(navigator.vibrate) navigator.vibrate(15); }
+  return true;
+}
+function tapSerum(x,y){ spawnSerumAt(x,y,false); }
+function onMoveInput(e){
+  if(!gameActive) return; e.preventDefault();
+  const {x,y}=getPos(e);
+  if(stage===2){
+    const now=Date.now();
+    if(now-lastDragT<70) return;
+    lastDragT=now; spawnSerumAt(x,y,true);
+  } else if(stage===3){ moveMaskTo(x,y); }
+}
+function onEndInput(e){ if(!gameActive) return; if(stage===3) releaseMask(); }
+function updateSerumCvs(){
+  serumRipples.forEach(r=>{
+    const t=Math.min((Date.now()-r.start)/r.duration,1);
+    const ease=t<.5?2*t*t:-1+(4-2*t)*t;
+    const newR=r.maxR*ease;
+    if(newR>r.prevR+1){
+      const g=serumCtx2.createRadialGradient(r.x,r.y,newR*.1,r.x,r.y,newR);
+      g.addColorStop(0,'rgba(120,205,248,0.92)');
+      g.addColorStop(.7,'rgba(100,195,245,0.8)');
+      g.addColorStop(1,'rgba(80,180,240,0)');
+      serumCtx2.fillStyle=g;
+      serumCtx2.beginPath(); serumCtx2.arc(r.x,r.y,newR,0,Math.PI*2); serumCtx2.fill();
+      r.prevR=newR;
+    }
+  });
+  serumRipples=serumRipples.filter(r=>Date.now()-r.start<r.duration+80);
+}
+function drawSerumRipples(){
+  serumRipples.forEach(r=>{
+    const t=Math.min((Date.now()-r.start)/r.duration,1);
+    const ease=t<.5?2*t*t:-1+(4-2*t)*t;
+    const rad=r.maxR*ease,alpha=Math.max(0,(1-t)*.7);
+    if(alpha<0.01) return;
+    ctx.beginPath(); ctx.arc(r.x,r.y,rad,0,Math.PI*2);
+    ctx.strokeStyle=`rgba(40,170,230,${alpha})`;
+    ctx.lineWidth=2.5; ctx.stroke();
+    if(t<0.25&&rad<40){
+      const g2=ctx.createRadialGradient(r.x,r.y,0,r.x,r.y,22);
+      g2.addColorStop(0,`rgba(210,245,255,${(1-t/.25)*.6})`);
+      g2.addColorStop(1,'transparent');
+      ctx.fillStyle=g2; ctx.beginPath(); ctx.arc(r.x,r.y,22,0,Math.PI*2); ctx.fill();
+    }
+  });
+}
+function measureSerumCoverage(){
+  const fcx=CW*.5,fcy=CH*.44,frx=CW*.42,fry=CH*.44;
+  const d=serumCtx2.getImageData(0,0,CW,CH).data;
+  let total=0,covered=0;
+  for(let y=0;y<CH;y+=4) for(let x=0;x<CW;x+=4){
+    if(((x-fcx)/frx)**2+((y-fcy)/fry)**2<=1){ total++; if(d[(y*CW+x)*4+3]>25) covered++; }
+  }
+  return total>0?covered/total:0;
+}
+
+// ─── Stage 3: Mask drag-and-place ───
+let maskLayer=null,maskState='idle',maskPos=null,maskBaseY=0;
+let maskDragActive=false,maskPlaceStart=0,maskPlaceFrom=null;
+function buildPack(){
+  maskState='idle'; maskDragActive=false;
+  maskBaseY=CH*.90; maskPos={x:CW/2,y:maskBaseY};
+  maskPlaceFrom=null; createMaskLayer();
+}
+function createMaskLayer(){
+  maskLayer=document.createElement('canvas');
+  maskLayer.width=CW; maskLayer.height=CH;
+  const mc=maskLayer.getContext('2d');
+  const cx=CW/2,cy=CH/2,mw=CW*.82,mh=CH*.55,r=14;
+  const mg=mc.createLinearGradient(0,cy-mh/2,0,cy+mh/2);
+  mg.addColorStop(0,'#F2F8FF'); mg.addColorStop(1,'#E4EFFF');
+  mc.fillStyle=mg;
+  mc.beginPath();
+  mc.moveTo(cx-mw/2+r,cy-mh/2); mc.lineTo(cx+mw/2-r,cy-mh/2);
+  mc.quadraticCurveTo(cx+mw/2,cy-mh/2,cx+mw/2,cy-mh/2+r);
+  mc.lineTo(cx+mw/2,cy+mh/2-r);
+  mc.quadraticCurveTo(cx+mw/2,cy+mh/2,cx+mw/2-r,cy+mh/2);
+  mc.lineTo(cx-mw/2+r,cy+mh/2);
+  mc.quadraticCurveTo(cx-mw/2,cy+mh/2,cx-mw/2,cy+mh/2-r);
+  mc.lineTo(cx-mw/2,cy-mh/2+r);
+  mc.quadraticCurveTo(cx-mw/2,cy-mh/2,cx-mw/2+r,cy-mh/2);
+  mc.closePath(); mc.fill();
+  mc.strokeStyle='rgba(140,195,240,.5)'; mc.lineWidth=1.5; mc.stroke();
+  mc.strokeStyle='rgba(170,210,245,.35)'; mc.lineWidth=1;
+  [.33,.66].forEach(t=>{
+    mc.beginPath(); mc.moveTo(cx-mw/2+r,cy-mh/2+mh*t); mc.lineTo(cx+mw/2-r,cy-mh/2+mh*t); mc.stroke();
+  });
+  mc.globalCompositeOperation='destination-out';
+  const eox=mw*.20,eoy=mh*.07,ew=mw*.125,eh=mh*.11;
+  mc.beginPath(); mc.ellipse(cx-eox,cy-eoy,ew,eh,0,0,Math.PI*2); mc.fill();
+  mc.beginPath(); mc.ellipse(cx+eox,cy-eoy,ew,eh,0,0,Math.PI*2); mc.fill();
+  mc.beginPath(); mc.ellipse(cx,cy+mh*.22,mw*.07,mh*.065,0,0,Math.PI*2); mc.fill();
+}
+function renderMaskAt(px,py,alpha,scale=1){
+  if(!maskLayer) return;
+  ctx.save(); ctx.globalAlpha=alpha;
+  ctx.translate(px,py); ctx.scale(scale,scale); ctx.translate(-px,-py);
+  ctx.drawImage(maskLayer,px-CW/2,py-CH/2); ctx.restore();
+}
+function startMaskDrag(x,y){
+  if(maskState==='placed'||maskState==='landing') return;
+  maskDragActive=true; maskState='dragging'; maskPos={x,y};
+}
+function moveMaskTo(x,y){ if(maskDragActive) maskPos={x,y}; }
+function releaseMask(){
+  if(!maskDragActive) return;
+  maskDragActive=false;
+  const fcx=CW*.5,fcy=CH*.44;
+  const dist=Math.hypot(maskPos.x-fcx,maskPos.y-fcy);
+  maskPlaceFrom={...maskPos}; maskPlaceStart=Date.now();
+  maskState=dist<CW*.4?'landing':'returning';
+}
+function tapPack(x,y){ startMaskDrag(x,y); }
+
+// ─── Render loop ───
+function renderFrame(){
+  if(!gameActive){ rafId=null; return; }
+  ctx.clearRect(0,0,CW,CH);
+  if(stage===1){
+    drawFace(false,0); pores.forEach(drawPore);
+  } else if(stage===2){
+    drawFace(true,0);
+    updateSerumCvs();
+    ctx.save();
+    ctx.beginPath(); ctx.ellipse(CW*.5,CH*.44,CW*.44,CH*.46,0,0,Math.PI*2); ctx.clip();
+    ctx.globalAlpha=.6; ctx.drawImage(serumCvs,0,0); ctx.globalAlpha=1;
+    drawSerumRipples(); ctx.restore();
+    coverFrame++;
+    if(coverFrame%8===0){
+      serumCoverage=measureSerumCoverage();
+      const pct=Math.round(serumCoverage*100);
+      document.getElementById('progressDisplay').textContent=pct+'%';
+      if(serumCoverage>=0.85&&gameActive) stageClear();
+    }
+  } else if(stage===3){
+    const fcx=CW*.5,fcy=CH*.44;
+    if(maskState==='placed'){
+      drawFace(true,.65); renderMaskAt(fcx,fcy,.70);
+      const t=(Date.now()-maskPlaceStart)/900;
+      ['#FFE082','#80DEEA','#CE93D8','#A5D6A7','#FFAB91'].forEach((c,i)=>{
+        const a=t*2.5+i*Math.PI*.4,rad=26+i*7;
+        ctx.fillStyle=c; ctx.globalAlpha=Math.max(0,1-t*.6);
+        ctx.beginPath(); ctx.arc(fcx+Math.cos(a)*rad,fcy+Math.sin(a)*rad,4,0,Math.PI*2); ctx.fill();
+        ctx.globalAlpha=1;
+      });
+    } else if(maskState==='landing'){
+      const t=Math.min((Date.now()-maskPlaceStart)/650,1);
+      const ease=t<.5?2*t*t:-1+(4-2*t)*t;
+      const px=maskPlaceFrom.x+(fcx-maskPlaceFrom.x)*ease;
+      const py=maskPlaceFrom.y+(fcy-maskPlaceFrom.y)*ease;
+      const bounce=t>.72?Math.sin((t-.72)/.28*Math.PI)*.06:0;
+      drawFace(true,ease*.55); renderMaskAt(px,py,.58+ease*.14,1+bounce);
+      if(t>=1){
+        maskState='placed'; maskPlaceStart=Date.now();
+        if(navigator.vibrate) navigator.vibrate([20,10,20,10,30]);
+        setTimeout(stageClear,1300);
+      }
+    } else if(maskState==='returning'){
+      const t=Math.min((Date.now()-maskPlaceStart)/400,1);
+      const ease=t<.5?2*t*t:-1+(4-2*t)*t;
+      const px=maskPlaceFrom.x+(CW/2-maskPlaceFrom.x)*ease;
+      const py=maskPlaceFrom.y+(maskBaseY-maskPlaceFrom.y)*ease;
+      drawFace(true,0); renderMaskAt(px,py,.82);
+      if(t>=1){ maskState='idle'; maskPos={x:CW/2,y:maskBaseY}; }
+    } else {
+      drawFace(true,0);
+      renderMaskAt(maskPos.x,maskPos.y,maskState==='dragging'?.72:.84);
+      if(maskState==='idle'){
+        const ay=maskPos.y-CW*.40;
+        const a=.45+Math.sin(Date.now()*.004)*.35;
+        const bob=Math.sin(Date.now()*.004)*6;
+        ctx.save(); ctx.globalAlpha=a; ctx.strokeStyle='#9B48C0'; ctx.lineWidth=2.5; ctx.lineCap='round';
+        ctx.beginPath(); ctx.moveTo(CW/2,ay+bob+14); ctx.lineTo(CW/2,ay+bob-4); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(CW/2-8,ay+bob+4); ctx.lineTo(CW/2,ay+bob-8); ctx.lineTo(CW/2+8,ay+bob+4); ctx.stroke();
+        ctx.restore();
+      }
+    }
+  }
+  rafId=requestAnimationFrame(renderFrame);
+}
+
+// ─── Input ───
+function getPos(e){
+  const rect=canvas.getBoundingClientRect(),scale=CW/rect.width;
+  const src=e.touches?e.touches[0]:e;
+  return {x:(src.clientX-rect.left)*scale,y:(src.clientY-rect.top)*scale};
+}
+function onTap(e){
+  if(!gameActive) return; e.preventDefault();
+  const {x,y}=getPos(e);
+  if(stage===1) tapPore(x,y);
+  else if(stage===2) tapSerum(x,y);
+  else if(stage===3) tapPack(x,y);
+  if(stage!==2) showScorePop(e.touches?e.touches[0].clientX:e.clientX,e.touches?e.touches[0].clientY:e.clientY);
+}
+
+// ─── Score / HUD ───
+function addScore(pts){ stageScore+=pts; score+=pts; document.getElementById('scoreDisplay').textContent=score; }
+function showScorePop(cx,cy){
+  const el=document.createElement('div'); el.className='score-pop';
+  el.style.cssText=`left:${cx-18}px;top:${cy-24}px`; el.textContent='+점수';
+  document.body.appendChild(el); setTimeout(()=>el.remove(),900);
+}
+function updateHUD(){
+  document.getElementById('timerDisplay').textContent=timeLeft;
+  document.getElementById('timerDisplay').className='hud-val'+(timeLeft<=8?' red':'');
+  const pct=(timeLeft/STAGE_CFG[stage].time)*100;
+  const fill=document.getElementById('timerFill');
+  fill.style.width=pct+'%';
+  fill.style.background=pct>60?'#3BAF6A':pct>30?'#F5A623':'#D63870';
+  if(stage===2) return;
+  if(stage===3){
+    document.getElementById('progressDisplay').textContent=
+      maskState==='placed'?'완성!':maskState==='landing'?'적용중':'드래그';
+    return;
+  }
+  let done=0,total=0;
+  if(stage===1){ total=pores.length; done=pores.filter(p=>p.popped).length; }
+  document.getElementById('progressDisplay').textContent=`${done}/${total}`;
+}
+
+// ─── Stage flow ───
+function showStageIntro(){
+  const cfg=STAGE_CFG[stage];
+  document.getElementById('gameHdrTitle').textContent=`스테이지 ${stage} / 3`;
+  document.getElementById('stageLabel').textContent=cfg.name;
+  document.getElementById('gameHint').textContent=cfg.hint;
+  [1,2,3].forEach(i=>{
+    const s=document.getElementById('step'+i);
+    s.className='stage-step'+(i<stage?' done':i===stage?' active':'');
+  });
+  document.getElementById('ovIcon').textContent=cfg.icon;
+  document.getElementById('ovNum').textContent=`STAGE ${stage} OF 3`;
+  document.getElementById('ovTitle').textContent=cfg.name;
+  document.getElementById('ovDesc').textContent=cfg.desc;
+  showOv('stageIntroOv');
+}
+function showOv(id){
+  ['stageIntroOv','countdownOv','stageClearOv','failOv'].forEach(x=>{
+    document.getElementById(x).classList.toggle('hidden',x!==id);
+  });
+}
+function hideAllOv(){
+  ['stageIntroOv','countdownOv','stageClearOv','failOv'].forEach(x=>document.getElementById(x).classList.add('hidden'));
+}
+function startCountdown(){
+  showOv('countdownOv');
+  let n=3;
+  const el=document.getElementById('countNum');
+  el.textContent=n;
+  const iv=setInterval(()=>{
+    n--;
+    if(n===0){ clearInterval(iv); beginStagePlay(); return; }
+    el.style.animation='none'; el.offsetHeight; el.style.animation='';
+    el.textContent=n;
+  },900);
+}
+function beginStagePlay(){
+  hideAllOv(); gameActive=true; stageScore=0;
+  timeLeft=STAGE_CFG[stage].time; updateHUD(); renderFrame();
+  timerIV=setInterval(()=>{ timeLeft--; updateHUD(); if(timeLeft<=0) stageFail(); },1000);
+}
+function stageClear(){
+  if(!gameActive) return;
+  gameActive=false; clearInterval(timerIV);
+  if(rafId){ cancelAnimationFrame(rafId); rafId=null; }
+  const bonus=Math.ceil(timeLeft*3);
+  addScore(bonus);
+  const isFinal=(stage===3);
+  document.getElementById('clearTitle').textContent=isFinal?'🎉 모든 케어 완료!':'스테이지 클리어!';
+  document.getElementById('clearScore').textContent=`+${bonus}점 시간 보너스 획득!`;
+  document.getElementById('clearBtn').textContent=isFinal?'쿠폰 받기 →':'다음 스테이지 →';
+  document.getElementById('clearBtn').onclick=isFinal?showCoupon:nextStage;
+  showOv('stageClearOv');
+}
+function stageFail(){
+  if(!gameActive) return;
+  gameActive=false; clearInterval(timerIV);
+  if(rafId){ cancelAnimationFrame(rafId); rafId=null; }
+  showOv('failOv');
+}
+function nextStage(){ stage=Math.min(stage+1,3); initStageAssets(); showStageIntro(); }
+function retryStage(){ initStageAssets(); showStageIntro(); }
+function initStageAssets(){
+  ctx&&ctx.clearRect(0,0,CW,CH);
+  if(stage===1) buildPores();
+  else if(stage===2){ buildSerum(); document.getElementById('progressDisplay').textContent='0%'; }
+  else if(stage===3){ buildPack(); document.getElementById('progressDisplay').textContent='드래그'; }
+  if(ctx){
+    if(stage===1) drawFace(false,0);
+    else if(stage===2) drawFace(true,0);
+    else drawFace(true,.3);
+  }
+}
+
+// ─── Entry ───
+function enterGame(){
+  stage=1; score=0; totalScore=0;
+  showScreen('gameScreen');
+  requestAnimationFrame(()=>{
+    setupCanvas(); initStageAssets();
+    canvas.addEventListener('click',onTap);
+    canvas.addEventListener('touchstart',onTap,{passive:false});
+    canvas.addEventListener('touchmove',onMoveInput,{passive:false});
+    canvas.addEventListener('touchend',onEndInput,{passive:false});
+    canvas.addEventListener('mousemove',e=>{if(e.buttons>0)onMoveInput(e);});
+    canvas.addEventListener('mouseup',onEndInput);
+    showStageIntro();
+  });
+}
+function showCoupon(){
+  totalScore=score;
+  const g=score>=300?'S':score>=200?'A':score>=120?'B':'C';
+  document.getElementById('finalTotalScore').textContent=totalScore;
+  document.getElementById('finalGrade').textContent=g;
+  showScreen('couponScreen');
+}
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(id!=='gameScreen'){ gameActive=false; clearInterval(timerIV); if(rafId){cancelAnimationFrame(rafId);rafId=null;} }
+}
+</script>
+</html>

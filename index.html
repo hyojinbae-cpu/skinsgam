@@ -1,89 +1,126 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Mask Pack Challenge</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>oliveyoung SkinScan 게임 허브</title>
+<style>
+:root{
+  --rose:#D63870; --rose-lt:#F0609A; --plum:#9B48C0;
+  --surface:rgba(255,249,254,0.93); --text:#1C0714; --sub:#8C6278;
+  --border:rgba(214,56,112,0.12);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{
+  width:100%;height:100%;
+  font-family:'Apple SD Gothic Neo','Noto Sans KR',-apple-system,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  background-color:#FEE9F2;
+  background-image:
+    radial-gradient(ellipse 80% 55% at 15% 8%, #FFD6EC 0%, transparent 65%),
+    radial-gradient(ellipse 65% 55% at 85% 18%, #EDDCFF 0%, transparent 60%),
+    radial-gradient(ellipse 70% 55% at 45% 95%, #FFD0E6 0%, transparent 65%);
+  display:flex;align-items:center;justify-content:center;min-height:100vh;
+}
+.wrap{
+  width:100%;max-width:420px;
+  padding:40px 24px 48px;
+  display:flex;flex-direction:column;align-items:center;gap:28px;
+}
+.brand{text-align:center}
+.brand-eye{font-size:11px;font-weight:800;color:var(--sub);letter-spacing:2.5px;text-transform:uppercase;margin-bottom:8px}
+.brand-title{font-size:34px;font-weight:900;color:var(--text);letter-spacing:-2px;line-height:1.1}
+.brand-sub{font-size:13px;color:var(--sub);margin-top:8px;font-weight:600}
+
+.games{width:100%;display:flex;flex-direction:column;gap:14px}
+
+.game-card{
+  background:var(--surface);
+  border-radius:22px;
+  border:1px solid var(--border);
+  box-shadow:0 12px 40px rgba(214,56,112,0.1),0 2px 8px rgba(0,0,0,0.04),
+             inset 0 0 0 1px rgba(255,255,255,0.85);
+  overflow:hidden;
+  text-decoration:none;
+  display:block;
+  transition:transform 0.15s,box-shadow 0.15s;
+  -webkit-tap-highlight-color:transparent;
+}
+.game-card:active{transform:scale(0.98);box-shadow:0 6px 20px rgba(214,56,112,0.12)}
+
+.card-top{padding:22px 22px 0;display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.card-icon{font-size:42px;line-height:1}
+.card-badge{
+  font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;
+  padding:4px 10px;border-radius:20px;
+  background:rgba(214,56,112,0.1);color:var(--rose);
+  margin-top:4px;white-space:nowrap;
+}
+.card-body{padding:14px 22px 22px}
+.card-name{font-size:20px;font-weight:900;color:var(--text);letter-spacing:-1px;margin-bottom:5px}
+.card-desc{font-size:13px;color:var(--sub);line-height:1.6}
+.card-steps{display:flex;gap:6px;margin-top:14px;flex-wrap:wrap}
+.step-pill{
+  font-size:11px;font-weight:700;padding:4px 11px;border-radius:20px;
+  background:rgba(214,56,112,0.07);color:var(--rose);
+}
+
+.card-cta{
+  margin:0 22px 22px;padding:14px;
+  background:linear-gradient(135deg,var(--rose-lt) 0%,var(--rose) 55%,var(--plum) 100%);
+  border-radius:14px;text-align:center;
+  font-size:14px;font-weight:800;color:white;letter-spacing:-0.2px;
+  box-shadow:0 6px 20px rgba(214,56,112,0.3);
+}
+
+.footer{text-align:center;font-size:11px;color:var(--sub);font-weight:600;letter-spacing:0.3px}
+</style>
 </head>
 <body>
-
-<!-- ── Start Screen ── -->
-<div id="startScreen" class="overlay active">
-  <div class="start-inner">
-    <div class="logo-wrap">
-      <div class="logo-sparkle">✨</div>
-      <h1 class="game-title">Mask Pack<br>Challenge</h1>
-      <p class="game-sub">올리브영 뷰티 미니게임</p>
-    </div>
-    <div class="best-wrap" id="bestWrap" style="display:none">
-      <span class="best-label">🏆 BEST</span>
-      <span class="best-val" id="bestVal">0</span>
-    </div>
-    <button class="btn-primary" id="btnStart">Start Game ▶</button>
-    <div class="music-row">
-      <button class="btn-music" id="btnMusic">🔇 Sound Off</button>
-    </div>
-    <div class="steps-preview">
-      <div class="step-chip">✂ Open</div>
-      <div class="step-arrow">→</div>
-      <div class="step-chip">🖐 Pick up</div>
-      <div class="step-arrow">→</div>
-      <div class="step-chip">✨ Apply</div>
-    </div>
+<div class="wrap">
+  <div class="brand">
+    <p class="brand-eye">oliveyoung</p>
+    <h1 class="brand-title">SkinScan<br>게임 허브</h1>
+    <p class="brand-sub">스킨케어 미니게임 2종 · 쿠폰 증정</p>
   </div>
-</div>
 
-<!-- ── Complete Screen ── -->
-<div id="completeScreen" class="overlay">
-  <canvas id="confettiCanvas"></canvas>
-  <div class="complete-inner">
-    <div class="complete-face" id="completeFace"></div>
-    <h2 class="complete-title" id="completeTitle">Perfect!</h2>
-    <div class="stars-row" id="starsRow"></div>
-    <div class="score-card">
-      <div class="score-row">
-        <span class="score-label">Score</span>
-        <span class="score-num" id="finalScore">0</span>
+  <div class="games">
+    <a class="game-card" href="pore-game.html">
+      <div class="card-top">
+        <span class="card-icon">🌋</span>
+        <span class="card-badge">3단계 미션</span>
       </div>
-      <div class="score-row" id="newBestRow" style="display:none">
-        <span class="score-label new-best">🏆 New Best!</span>
+      <div class="card-body">
+        <p class="card-name">피지뽑기 스킨스캔</p>
+        <p class="card-desc">피지 뽑기 → 세럼 바르기 → 진정 팩 올리기<br>3단계 스킨케어 미션을 완료하면 쿠폰 지급!</p>
+        <div class="card-steps">
+          <span class="step-pill">🌋 피지 뽑기</span>
+          <span class="step-pill">💧 세럼 바르기</span>
+          <span class="step-pill">🩹 팩 올리기</span>
+        </div>
       </div>
-      <div class="score-details" id="scoreDetails"></div>
-    </div>
-    <div class="complete-btns">
-      <button class="btn-primary" id="btnReplay">Play Again</button>
-      <button class="btn-secondary" id="btnHome">Home</button>
-    </div>
-  </div>
-</div>
+      <div class="card-cta">게임 시작하기 →</div>
+    </a>
 
-<!-- ── Game Canvas ── -->
-<div id="gameWrap">
-  <div class="hud">
-    <div class="hud-left">
-      <div class="hud-label">TIME</div>
-      <div class="hud-val" id="timerDisplay">0:00</div>
-    </div>
-    <div class="hud-center">
-      <div class="step-dots">
-        <div class="sdot active" id="sd1"></div>
-        <div class="sdot" id="sd2"></div>
-        <div class="sdot" id="sd3"></div>
+    <a class="game-card" href="mask-game.html">
+      <div class="card-top">
+        <span class="card-icon">✨</span>
+        <span class="card-badge">3스텝 챌린지</span>
       </div>
-      <div class="hud-step-label" id="stepLabel">Step 1 · Open Package</div>
-    </div>
-    <div class="hud-right">
-      <div class="hud-label">SCORE</div>
-      <div class="hud-val" id="scoreDisplay">0</div>
-    </div>
+      <div class="card-body">
+        <p class="card-name">마스크팩 챌린지</p>
+        <p class="card-desc">패키지 뜯기 → 마스크 꺼내기 → 얼굴에 올리기<br>빠르고 정확하게 완성할수록 높은 점수!</p>
+        <div class="card-steps">
+          <span class="step-pill">✂ 패키지 열기</span>
+          <span class="step-pill">🖐 집어들기</span>
+          <span class="step-pill">🎯 얼굴에 적용</span>
+        </div>
+      </div>
+      <div class="card-cta">게임 시작하기 →</div>
+    </a>
   </div>
-  <canvas id="game"></canvas>
-  <div class="instruction-bar" id="instrBar">
-    <span id="instrText">Drag the corner to tear open the package!</span>
-  </div>
-</div>
 
-<script src="script.js"></script>
+  <p class="footer">oliveyoung SkinScan · 2026</p>
+</div>
 </body>
 </html>
