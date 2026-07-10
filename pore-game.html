@@ -187,7 +187,7 @@ body{
 .ov-icon{font-size:52px;line-height:1}
 .ov-stage-num{font-size:10px;font-weight:800;color:var(--sub);letter-spacing:2px;text-transform:uppercase}
 .ov-title{font-size:26px;font-weight:900;color:var(--text);letter-spacing:-1px}
-.ov-desc{font-size:14px;color:var(--sub);text-align:center;padding:0 32px;line-height:1.7}
+.ov-desc{font-size:14px;color:var(--sub);text-align:center;padding:0 32px;line-height:1.7;white-space:pre-line}
 .ov-countdown{
   font-size:72px;font-weight:900;color:var(--rose);letter-spacing:-4px;
   font-variant-numeric:tabular-nums;animation:pop .9s ease-out forwards;
@@ -432,8 +432,8 @@ let gameActive=false, stageScore=0;
 
 const STAGE_CFG={
   1:{name:'피지 뽑기',icon:'🌋',desc:'T존에 몰린 피지를 모두\n꾹 눌러 뽑아봐요!',time:30,hint:'피지를 탭해서 뽑아봐요!',color:'#D63870'},
-  2:{name:'세럼 바르기',icon:'💧',desc:'얼굴을 탭하거나 드래그해서\n세럼을 온 얼굴에 펴발라봐요!',time:25,hint:'탭·드래그로 세럼을 발라봐요!',color:'#2AA8A0'},
-  3:{name:'진정 팩 올리기',icon:'🩹',desc:'마스크팩을 잡아서\n얼굴 위로 올려봐요!',time:20,hint:'팩을 드래그해서 얼굴에 올려봐요!',color:'#9B48C0'},
+  2:{name:'세럼 바르기',icon:'💧',desc:'모공을 조여주는 세럼을 발라줘요!\n탭하거나 드래그해서 얼굴 전체에 꼼꼼히 펴바르세요',time:25,hint:'탭·드래그로 세럼을 발라봐요!',color:'#2AA8A0'},
+  3:{name:'진정 팩 올리기',icon:'🩹',desc:'피부에 자극이 많이 생겼네요!\n진정팩을 잡아 얼굴 위에 올려주세요',time:20,hint:'팩을 드래그해서 얼굴에 올려봐요!',color:'#9B48C0'},
 };
 
 // ─── Canvas ───
