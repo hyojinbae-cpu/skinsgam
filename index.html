@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Mask Pack Challenge</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ── Start Screen ── -->
+<div id="startScreen" class="overlay active">
+  <div class="start-inner">
+    <div class="logo-wrap">
+      <div class="logo-sparkle">✨</div>
+      <h1 class="game-title">Mask Pack<br>Challenge</h1>
+      <p class="game-sub">올리브영 뷰티 미니게임</p>
+    </div>
+    <div class="best-wrap" id="bestWrap" style="display:none">
+      <span class="best-label">🏆 BEST</span>
+      <span class="best-val" id="bestVal">0</span>
+    </div>
+    <button class="btn-primary" id="btnStart">Start Game ▶</button>
+    <div class="music-row">
+      <button class="btn-music" id="btnMusic">🔇 Sound Off</button>
+    </div>
+    <div class="steps-preview">
+      <div class="step-chip">✂ Open</div>
+      <div class="step-arrow">→</div>
+      <div class="step-chip">🖐 Pick up</div>
+      <div class="step-arrow">→</div>
+      <div class="step-chip">✨ Apply</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Complete Screen ── -->
+<div id="completeScreen" class="overlay">
+  <canvas id="confettiCanvas"></canvas>
+  <div class="complete-inner">
+    <div class="complete-face" id="completeFace"></div>
+    <h2 class="complete-title" id="completeTitle">Perfect!</h2>
+    <div class="stars-row" id="starsRow"></div>
+    <div class="score-card">
+      <div class="score-row">
+        <span class="score-label">Score</span>
+        <span class="score-num" id="finalScore">0</span>
+      </div>
+      <div class="score-row" id="newBestRow" style="display:none">
+        <span class="score-label new-best">🏆 New Best!</span>
+      </div>
+      <div class="score-details" id="scoreDetails"></div>
+    </div>
+    <div class="complete-btns">
+      <button class="btn-primary" id="btnReplay">Play Again</button>
+      <button class="btn-secondary" id="btnHome">Home</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Game Canvas ── -->
+<div id="gameWrap">
+  <div class="hud">
+    <div class="hud-left">
+      <div class="hud-label">TIME</div>
+      <div class="hud-val" id="timerDisplay">0:00</div>
+    </div>
+    <div class="hud-center">
+      <div class="step-dots">
+        <div class="sdot active" id="sd1"></div>
+        <div class="sdot" id="sd2"></div>
+        <div class="sdot" id="sd3"></div>
+      </div>
+      <div class="hud-step-label" id="stepLabel">Step 1 · Open Package</div>
+    </div>
+    <div class="hud-right">
+      <div class="hud-label">SCORE</div>
+      <div class="hud-val" id="scoreDisplay">0</div>
+    </div>
+  </div>
+  <canvas id="game"></canvas>
+  <div class="instruction-bar" id="instrBar">
+    <span id="instrText">Drag the corner to tear open the package!</span>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
