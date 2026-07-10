@@ -569,7 +569,7 @@ function buildSerum(){
 function spawnSerumAt(x,y,isDrag){
   const fcx=CW*.5,fcy=CH*.44,frx=CW*.44,fry=CH*.46;
   if(((x-fcx)/frx)**2+((y-fcy)/fry)**2>1) return false;
-  const maxR=isDrag?CW*.28:CW*.42,dur=isDrag?900:1300;
+  const maxR=isDrag?CW*.13:CW*.18,dur=isDrag?900:1300;
   serumRipples.push({x,y,prevR:0,maxR,start:Date.now(),duration:dur});
   if(!isDrag){ addScore(4); if(navigator.vibrate) navigator.vibrate(15); }
   return true;
