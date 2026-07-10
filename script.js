@@ -532,10 +532,13 @@ function layoutPositions() {
 }
 
 // ─── Placement check ─────────────────────────────────────────
-const SNAP_RADIUS = 60;
+const SNAP_RADIUS = 85;
 function checkSnap() {
-  if (mask.placed || !mask.held) return;
-  const d = dist(mask.x, mask.y, face.x, face.y);
+  if (mask.placed) return;
+  const d = Math.min(
+    dist(mask.x, mask.y, face.x, face.y),
+    dist(mask.targetX, mask.targetY, face.x, face.y)
+  );
   if (d < SNAP_RADIUS) {
     mask.held    = false;
     mask.placed  = true;
@@ -783,9 +786,9 @@ function onUp(e) {
   tearDrag.active = false;
 
   if ((state === ST.PICK || state === ST.APPLY) && mask.held) {
+    if (state === ST.APPLY) checkSnap();
     mask.held  = false;
     mask.scale = 1.0;
-    if (state === ST.APPLY) checkSnap();
   }
 }
 
