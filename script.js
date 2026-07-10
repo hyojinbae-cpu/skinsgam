@@ -47,7 +47,7 @@ let mask = {
   held:false,
   inPackage:true,      // still inside package
   placed:false,
-  w:176, h:118,
+  w:82, h:115,
   alpha:1, scale:1,
 };
 let prevMouseX = 0, prevMouseY = 0;
@@ -258,11 +258,11 @@ function buildMaskOffscreen(w, h) {
 
   // Cut eye holes
   mc.globalCompositeOperation = 'destination-out';
-  const ew = bw*0.21, eh = bh*0.19, ey = bh*0.4, exOff = bw*0.265;
+  const ew = bw*0.15, eh = bh*0.075, ey = bh*0.44, exOff = bw*0.214;
   mc.beginPath(); mc.ellipse(bw/2 - exOff, ey, ew, eh, 0, 0, Math.PI*2); mc.fill();
   mc.beginPath(); mc.ellipse(bw/2 + exOff, ey, ew, eh, 0, 0, Math.PI*2); mc.fill();
   // Nose gap
-  mc.beginPath(); mc.ellipse(bw/2, bh*0.68, bw*0.1, bh*0.09, 0, 0, Math.PI*2); mc.fill();
+  mc.beginPath(); mc.ellipse(bw/2, bh*0.57, bw*0.08, bh*0.07, 0, 0, Math.PI*2); mc.fill();
   mc.globalCompositeOperation = 'source-over';
 }
 
