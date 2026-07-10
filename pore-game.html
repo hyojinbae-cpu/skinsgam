@@ -206,7 +206,58 @@ body{
 
 /* VFX */
 .score-pop{position:fixed;pointer-events:none;z-index:99;font-size:16px;font-weight:900;color:var(--rose);animation:sfloat .85s ease-out forwards}
-@keyframes sfloat{to{transform:translateY(-44px);opacity:0}}
+@keyframes sfloat{to{transform:translateY(-54px);opacity:0}}
+.combo-pop{position:fixed;pointer-events:none;z-index:100;font-size:13px;font-weight:900;color:white;background:var(--rose);padding:5px 14px;border-radius:20px;box-shadow:0 4px 16px rgba(214,56,112,0.4);animation:sfloat .9s ease-out forwards;white-space:nowrap}
+
+/* Result stars */
+.result-stars{display:flex;gap:8px;margin-bottom:12px}
+.rstar{font-size:36px;line-height:1;filter:drop-shadow(0 2px 8px rgba(200,150,0,.45));opacity:0;transform:scale(0) rotate(-20deg);transition:opacity .35s,transform .35s cubic-bezier(0.2,1.6,.5,1)}
+.rstar.show{opacity:1;transform:scale(1) rotate(0)}
+
+/* New record banner */
+.new-record-banner{background:linear-gradient(135deg,#FFD700,#FFA020);color:white;font-size:13px;font-weight:900;padding:8px 24px;border-radius:20px;letter-spacing:.3px;margin-bottom:14px;display:none;box-shadow:0 4px 16px rgba(255,180,0,.35);animation:pop .5s cubic-bezier(0.2,1.6,.5,1)}
+
+/* Stage breakdown */
+.stage-breakdown{background:white;border-radius:14px;width:100%;padding:14px 18px;margin-bottom:14px;box-shadow:0 4px 16px rgba(214,56,112,0.07);border:1px solid rgba(214,56,112,0.08)}
+.breakdown-title{font-size:10px;font-weight:800;color:var(--sub);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px}
+.breakdown-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--div)}
+.breakdown-row:last-child{border-bottom:none}
+.breakdown-stage{font-size:12px;color:var(--sub);font-weight:700}
+.breakdown-time{font-size:12px;font-weight:800;color:var(--text);font-variant-numeric:tabular-nums}
+.breakdown-pts{font-size:12px;color:var(--rose);font-weight:900}
+
+/* Best score bar on intro */
+.best-bar{display:none;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,#FFF8E0,#FFF2C0);border:1px solid rgba(200,160,0,0.18);border-radius:20px;padding:8px 20px;margin-bottom:10px}
+.best-bar-label{font-size:11px;font-weight:800;color:#A07808;letter-spacing:.5px}
+.best-bar-val{font-size:18px;font-weight:900;color:#6E4400;font-variant-numeric:tabular-nums}
+
+/* Nickname input */
+.nick-row{display:flex;gap:8px;width:100%;margin-bottom:6px}
+.nick-input{flex:1;border:1.5px solid rgba(214,56,112,0.22);border-radius:12px;padding:11px 16px;font-size:14px;font-weight:700;color:var(--text);background:white;outline:none;font-family:inherit}
+.nick-input:focus{border-color:var(--rose);box-shadow:0 0 0 3px rgba(214,56,112,0.12)}
+.nick-input::placeholder{color:#C0A0B0;font-weight:600}
+
+/* Leaderboard overlay */
+.lb-overlay{position:fixed;inset:0;z-index:200;background:rgba(28,7,20,0.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s}
+.lb-overlay.open{opacity:1;pointer-events:all}
+.lb-sheet{background:white;border-radius:24px 24px 0 0;width:100%;max-width:480px;padding:0 0 env(safe-area-inset-bottom,16px);max-height:85vh;display:flex;flex-direction:column;transform:translateY(100%);transition:transform .35s cubic-bezier(0.2,1,.5,1)}
+.lb-overlay.open .lb-sheet{transform:translateY(0)}
+.lb-handle{width:40px;height:4px;background:rgba(0,0,0,0.12);border-radius:2px;margin:12px auto 0}
+.lb-hdr{display:flex;align-items:center;justify-content:space-between;padding:16px 22px 12px}
+.lb-title{font-size:18px;font-weight:900;color:var(--text);letter-spacing:-1px}
+.lb-close{font-size:22px;color:var(--sub);cursor:pointer;line-height:1;padding:4px}
+.lb-list{flex:1;overflow-y:auto;padding:0 18px 20px}
+.lb-empty{text-align:center;color:var(--sub);font-size:14px;font-weight:600;padding:32px 0}
+.lb-entry{display:flex;align-items:center;gap:12px;padding:12px 8px;border-bottom:1px solid var(--div)}
+.lb-entry:last-child{border-bottom:none}
+.lb-rank{font-size:18px;font-weight:900;color:var(--sub);min-width:28px;text-align:center;font-variant-numeric:tabular-nums}
+.lb-rank.gold{color:#D4A200}.lb-rank.silver{color:#8A9AA8}.lb-rank.bronze{color:#A0642A}
+.lb-medal{font-size:18px;min-width:28px;text-align:center}
+.lb-name{flex:1;font-size:14px;font-weight:800;color:var(--text)}
+.lb-you{font-size:10px;font-weight:800;color:var(--rose);background:rgba(214,56,112,0.1);border-radius:10px;padding:2px 7px;margin-left:4px}
+.lb-score{font-size:17px;font-weight:900;color:var(--rose);font-variant-numeric:tabular-nums;letter-spacing:-0.5px}
+.lb-date{font-size:10px;color:var(--sub);text-align:right;margin-top:2px}
+.lb-grade{font-size:11px;font-weight:800;color:white;background:var(--rose);border-radius:8px;padding:2px 7px}
 
 /* ── COUPON SCREEN ── */
 #couponScreen{background:linear-gradient(160deg,#FFF0F8 0%,#F8F4FF 50%,#EDF8F6 100%)}
@@ -321,6 +372,15 @@ body{
     <div style="height:10px"></div>
   </div>
   <div class="bottom-cta">
+    <div class="nick-row">
+      <input class="nick-input" id="nickInput" type="text" maxlength="10" placeholder="닉네임 입력 (최대 10자)" autocomplete="off">
+      <button class="btn" style="padding:11px 14px;font-size:18px;background:rgba(214,56,112,0.07);color:var(--rose);border:1.5px solid rgba(214,56,112,0.2);border-radius:12px;white-space:nowrap" onclick="showLeaderboard()">🏆 순위</button>
+    </div>
+    <div class="best-bar" id="bestBar">
+      <span class="best-bar-label">🏅 최고 기록</span>
+      <span class="best-bar-val" id="introBest">0</span>
+      <span class="best-bar-label">점</span>
+    </div>
     <button class="btn btn-dark" onclick="enterGame()">🎮 스킨케어 게임 시작하기</button>
     <p class="bottom-hint">3단계 미션 완료 시 쿠폰 지급!</p>
   </div>
@@ -368,8 +428,8 @@ body{
     <div class="stage-overlay hidden" id="failOv">
       <div class="ov-icon">⏰</div>
       <div class="ov-title">시간 초과!</div>
-      <div class="fail-msg">조금만 더 빠르게 해봐요</div>
-      <button class="ov-btn" onclick="retryStage()">다시 도전</button>
+      <div class="fail-msg" id="failMsg">조금만 더 빠르게 해봐요</div>
+      <button class="ov-btn" onclick="retryStage()">🔄 다시 도전</button>
     </div>
   </div>
 </div>
@@ -382,7 +442,13 @@ body{
   </div>
   <div class="coupon-body">
     <div class="coupon-emoji">🌿</div>
-    <p class="coupon-headline">피부 케어 완성!</p>
+    <div class="result-stars">
+      <span class="rstar" id="rstar1">⭐</span>
+      <span class="rstar" id="rstar2">⭐</span>
+      <span class="rstar" id="rstar3">⭐</span>
+    </div>
+    <div class="new-record-banner" id="newRecordBanner">🏆 신기록 달성!</div>
+    <p class="coupon-headline" id="couponHeadline">피부 케어 완성!</p>
     <p class="coupon-sub">3단계 스킨케어 미션을 완료했어요.<br>특별 할인 쿠폰을 드려요!</p>
     <div class="coupon-card">
       <div class="coupon-top">
@@ -402,9 +468,10 @@ body{
         <div class="coupon-expiry">유효기간: 2026년 8월 10일까지 · 최대 5,000원 할인</div>
       </div>
     </div>
+    <div class="stage-breakdown" id="stageBreakdown"></div>
     <div class="score-summary">
       <div class="score-item"><div class="score-num" id="finalTotalScore">0</div><div class="score-lbl">총 점수</div></div>
-      <div class="score-item"><div class="score-num">3</div><div class="score-lbl">완료 스테이지</div></div>
+      <div class="score-item"><div class="score-num" id="bestDisplay">0</div><div class="score-lbl">최고 기록</div></div>
       <div class="score-item"><div class="score-num" id="finalGrade">A</div><div class="score-lbl">등급</div></div>
     </div>
     <div class="product-reco">
@@ -422,6 +489,20 @@ body{
   </div>
 </div>
 
+<!-- ══ LEADERBOARD OVERLAY ══ -->
+<div class="lb-overlay" id="lbOverlay" onclick="if(event.target===this)closeLeaderboard()">
+  <div class="lb-sheet">
+    <div class="lb-handle"></div>
+    <div class="lb-hdr">
+      <span class="lb-title">🏆 명예의 전당</span>
+      <span class="lb-close" onclick="closeLeaderboard()">✕</span>
+    </div>
+    <div class="lb-list" id="lbList">
+      <div class="lb-empty">아직 기록이 없어요.<br>게임을 플레이해보세요!</div>
+    </div>
+  </div>
+</div>
+
 </div><!-- .phone -->
 
 <script>
@@ -429,6 +510,11 @@ body{
 let stage=1, score=0, totalScore=0;
 let timeLeft=30, timerIV=null, rafId=null;
 let gameActive=false, stageScore=0;
+let playerName='';
+let bestScore=parseInt(localStorage.getItem('poreBest')||'0');
+let leaderboard=JSON.parse(localStorage.getItem('poreLB')||'[]');
+let lastTapTime=0, comboCount=0;
+let stageTimes={}, stageStartTime=0, stagePts={};
 
 const STAGE_CFG={
   1:{name:'피지 뽑기',icon:'🌋',desc:'T존에 몰린 피지를 모두\n꾹 눌러 뽑아봐요!',time:30,hint:'피지를 탭해서 뽑아봐요!',color:'#D63870'},
@@ -545,16 +631,33 @@ function drawExtraction(p){
     ctx.beginPath(); ctx.arc(p.x,p.y,p.r*.45,0,Math.PI*2); ctx.fillStyle='rgba(100,55,20,.3)'; ctx.fill();
   } else { p.extracting=false; p.popped=true; }
 }
+function getCombo(){
+  const now=Date.now();
+  if(now-lastTapTime<1400) comboCount=Math.min(comboCount+1,5);
+  else comboCount=1;
+  lastTapTime=now;
+  return comboCount;
+}
+function showComboPop(cx,cy,mult){
+  if(mult<2) return;
+  const labels={2:'COMBO ×2 🔥',3:'COMBO ×3 💥',4:'COMBO ×4 ⚡',5:'MAX ×5 ✨'};
+  const el=document.createElement('div'); el.className='combo-pop';
+  el.style.cssText=`left:${cx-60}px;top:${cy-58}px`; el.textContent=labels[mult];
+  document.body.appendChild(el); setTimeout(()=>el.remove(),900);
+}
 function tapPore(x,y){
   for(const p of pores){
     if(p.popped||p.extracting) continue;
     if(Math.hypot(x-p.x,y-p.y)>p.r*2.5) continue;
     p.extracting=true; p.extractStart=Date.now();
-    addScore(Math.ceil(p.r/3));
+    const mult=getCombo();
+    const pts=Math.ceil(p.r/3)*mult;
+    addScore(pts);
     if(navigator.vibrate) navigator.vibrate(22);
     setTimeout(()=>{ checkStage1Clear(); },750);
-    break;
+    return {pts,mult};
   }
+  return null;
 }
 function checkStage1Clear(){ if(pores.every(p=>p.popped)) stageClear(); }
 
@@ -707,6 +810,19 @@ function renderFrame(){
       document.getElementById('progressDisplay').textContent=pct+'%';
       if(serumCoverage>=0.85&&gameActive) stageClear();
     }
+    if(serumCoverage>0){
+      const rx=CW*.88,ry=CW*.13,r=CW*.058;
+      ctx.save();
+      ctx.beginPath(); ctx.arc(rx,ry,r,0,Math.PI*2);
+      ctx.strokeStyle='rgba(42,168,160,0.15)'; ctx.lineWidth=4; ctx.stroke();
+      ctx.beginPath(); ctx.arc(rx,ry,r,-Math.PI/2,-Math.PI/2+serumCoverage*Math.PI*2);
+      ctx.strokeStyle='#2AA8A0'; ctx.lineWidth=4; ctx.lineCap='round'; ctx.stroke();
+      ctx.font=`bold ${Math.round(CW*.04)}px system-ui`;
+      ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillStyle='#2AA8A0';
+      ctx.fillText(Math.round(serumCoverage*100)+'%',rx,ry);
+      ctx.restore();
+    }
   } else if(stage===3){
     const fcx=CW*.5,fcy=CH*.44;
     if(maskState==='placed'){
@@ -763,17 +879,21 @@ function getPos(e){
 function onTap(e){
   if(!gameActive) return; e.preventDefault();
   const {x,y}=getPos(e);
-  if(stage===1) tapPore(x,y);
-  else if(stage===2) tapSerum(x,y);
-  else if(stage===3) tapPack(x,y);
-  if(stage!==2) showScorePop(e.touches?e.touches[0].clientX:e.clientX,e.touches?e.touches[0].clientY:e.clientY);
+  const scx=e.touches?e.touches[0].clientX:e.clientX;
+  const scy=e.touches?e.touches[0].clientY:e.clientY;
+  if(stage===1){
+    const res=tapPore(x,y);
+    if(res){ showScorePop(scx,scy,res.pts); showComboPop(scx,scy,res.mult); }
+  } else if(stage===2){ tapSerum(x,y);
+  } else if(stage===3){ tapPack(x,y); }
 }
 
 // ─── Score / HUD ───
 function addScore(pts){ stageScore+=pts; score+=pts; document.getElementById('scoreDisplay').textContent=score; }
-function showScorePop(cx,cy){
+function showScorePop(cx,cy,pts){
+  if(!pts) return;
   const el=document.createElement('div'); el.className='score-pop';
-  el.style.cssText=`left:${cx-18}px;top:${cy-24}px`; el.textContent='+점수';
+  el.style.cssText=`left:${cx-22}px;top:${cy-28}px`; el.textContent='+'+pts;
   document.body.appendChild(el); setTimeout(()=>el.remove(),900);
 }
 function updateHUD(){
@@ -832,6 +952,7 @@ function startCountdown(){
 }
 function beginStagePlay(){
   hideAllOv(); gameActive=true; stageScore=0;
+  stageStartTime=Date.now(); comboCount=0; lastTapTime=0;
   timeLeft=STAGE_CFG[stage].time; updateHUD(); renderFrame();
   timerIV=setInterval(()=>{ timeLeft--; updateHUD(); if(timeLeft<=0) stageFail(); },1000);
 }
@@ -841,6 +962,8 @@ function stageClear(){
   if(rafId){ cancelAnimationFrame(rafId); rafId=null; }
   const bonus=Math.ceil(timeLeft*3);
   addScore(bonus);
+  stageTimes[stage]=Math.round((Date.now()-stageStartTime)/1000);
+  stagePts[stage]=(stageScore)+bonus;
   const isFinal=(stage===3);
   document.getElementById('clearTitle').textContent=isFinal?'🎉 모든 케어 완료!':'스테이지 클리어!';
   document.getElementById('clearScore').textContent=`+${bonus}점 시간 보너스 획득!`;
@@ -852,6 +975,10 @@ function stageFail(){
   if(!gameActive) return;
   gameActive=false; clearInterval(timerIV);
   if(rafId){ cancelAnimationFrame(rafId); rafId=null; }
+  let msg='조금만 더 빠르게 해봐요 💪';
+  if(stage===1){ const left=pores.filter(p=>!p.popped).length; msg=`피지 ${left}개 남았어요! 더 빠르게!`; }
+  else if(stage===2){ const pct=Math.round(serumCoverage*100); msg=`${pct}% 발랐어요! 85%까지 채워봐요`; }
+  document.getElementById('failMsg').textContent=msg;
   showOv('failOv');
 }
 function nextStage(){ stage=Math.min(stage+1,3); initStageAssets(); showStageIntro(); }
@@ -868,9 +995,36 @@ function initStageAssets(){
   }
 }
 
+// ─── Leaderboard ───
+function showLeaderboard(){
+  const medals=['🥇','🥈','🥉'];
+  const rankColors=['gold','silver','bronze'];
+  const curName=playerName||'익명';
+  if(!leaderboard.length){
+    document.getElementById('lbList').innerHTML='<div class="lb-empty">아직 기록이 없어요.<br>게임을 플레이해보세요! 🎮</div>';
+  } else {
+    document.getElementById('lbList').innerHTML=leaderboard.slice(0,10).map((e,i)=>`
+      <div class="lb-entry">
+        <span class="lb-medal">${i<3?medals[i]:''}</span>
+        <span class="lb-rank${i<3?' '+rankColors[i]:''}">${i<3?'':i+1}</span>
+        <span class="lb-name">${e.name}${e.name===curName?'<span class="lb-you">나</span>':''}</span>
+        <div style="text-align:right">
+          <div style="display:flex;align-items:center;gap:6px">
+            <span class="lb-grade">${e.grade}</span>
+            <span class="lb-score">${e.score}점</span>
+          </div>
+          <div class="lb-date">${e.date}</div>
+        </div>
+      </div>`).join('');
+  }
+  document.getElementById('lbOverlay').classList.add('open');
+}
+function closeLeaderboard(){ document.getElementById('lbOverlay').classList.remove('open'); }
+
 // ─── Entry ───
 function enterGame(){
-  stage=1; score=0; totalScore=0;
+  playerName=(document.getElementById('nickInput').value.trim()||'익명').slice(0,10);
+  stage=1; score=0; totalScore=0; stageTimes={}; stagePts={}; comboCount=0; lastTapTime=0;
   showScreen('gameScreen');
   requestAnimationFrame(()=>{
     setupCanvas(); initStageAssets();
@@ -885,15 +1039,66 @@ function enterGame(){
 }
 function showCoupon(){
   totalScore=score;
-  const g=score>=300?'S':score>=200?'A':score>=120?'B':'C';
+  const isNew=totalScore>bestScore;
+  if(isNew){ bestScore=totalScore; localStorage.setItem('poreBest',bestScore); }
+  const g=score>=450?'S':score>=300?'A':score>=180?'B':'C';
+  const stars=score>=450?3:score>=280?2:1;
   document.getElementById('finalTotalScore').textContent=totalScore;
   document.getElementById('finalGrade').textContent=g;
+  document.getElementById('bestDisplay').textContent=bestScore;
+  // Stars
+  ['rstar1','rstar2','rstar3'].forEach((id,i)=>{
+    const el=document.getElementById(id);
+    el.classList.remove('show'); el.textContent=i<stars?'⭐':'☆';
+    setTimeout(()=>el.classList.add('show'),320+i*160);
+  });
+  // New record banner
+  document.getElementById('newRecordBanner').style.display=isNew?'block':'none';
+  // Headline
+  const hl={3:'완벽한 케어! 🏆',2:'훌륭한 케어! ✨',1:'케어 완성!'};
+  document.getElementById('couponHeadline').textContent=hl[stars];
+  // Stage breakdown
+  const names={1:'🌋 피지 뽑기',2:'💧 세럼 바르기',3:'🩹 진정 팩'};
+  const rows=[1,2,3].map(s=>`<div class="breakdown-row">
+    <span class="breakdown-stage">${names[s]}</span>
+    <span class="breakdown-time">${stageTimes[s]||'--'}초</span>
+    <span class="breakdown-pts">+${stagePts[s]||0}pt</span>
+  </div>`).join('');
+  document.getElementById('stageBreakdown').innerHTML=`<div class="breakdown-title">스테이지별 기록</div>${rows}`;
+  // Save to leaderboard
+  const name=playerName||'익명';
+  const entry={name,score:totalScore,grade:g,date:new Date().toLocaleDateString('ko-KR',{month:'short',day:'numeric'})};
+  leaderboard.push(entry);
+  leaderboard.sort((a,b)=>b.score-a.score);
+  leaderboard=leaderboard.slice(0,20);
+  localStorage.setItem('poreLB',JSON.stringify(leaderboard));
   showScreen('couponScreen');
 }
 function showScreen(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   if(id!=='gameScreen'){ gameActive=false; clearInterval(timerIV); if(rafId){cancelAnimationFrame(rafId);rafId=null;} }
+  if(id==='introScreen'){
+    const b=parseInt(localStorage.getItem('poreBest')||'0');
+    bestScore=b;
+    const bar=document.getElementById('bestBar');
+    if(b>0){ bar.style.display='flex'; document.getElementById('introBest').textContent=b; }
+    else { bar.style.display='none'; }
+    const savedNick=localStorage.getItem('poreNick')||'';
+    document.getElementById('nickInput').value=savedNick;
+  }
 }
+// save nick on blur
+document.addEventListener('DOMContentLoaded',()=>{
+  document.getElementById('nickInput').addEventListener('blur',()=>{
+    const v=document.getElementById('nickInput').value.trim();
+    if(v) localStorage.setItem('poreNick',v);
+  });
+  // show best score on first load if any
+  const b=parseInt(localStorage.getItem('poreBest')||'0');
+  if(b>0){ document.getElementById('bestBar').style.display='flex'; document.getElementById('introBest').textContent=b; }
+  const savedNick=localStorage.getItem('poreNick')||'';
+  if(savedNick) document.getElementById('nickInput').value=savedNick;
+});
 </script>
 </html>
