@@ -628,15 +628,15 @@ function render(ts) {
 
   ctx.clearRect(0,0,W,H);
 
-  // Background
+  // Background — warm pearl
   const bg = ctx.createLinearGradient(0,0,W,H);
-  bg.addColorStop(0,'#FDE8F0'); bg.addColorStop(0.5,'#F5D8EE'); bg.addColorStop(1,'#EDD0F8');
+  bg.addColorStop(0,'#FFF6FA'); bg.addColorStop(0.5,'#FBF2FF'); bg.addColorStop(1,'#F7F0FF');
   ctx.fillStyle = bg; ctx.fillRect(0,0,W,H);
 
-  // Decorative soft circles
-  [[-0.3,-0.4,0.22,'#FFD0E8'],[ 0.4,0.2,0.18,'#D8D0FF'],[-0.2,0.5,0.14,'#FFE8C8']].forEach(([dx,dy,r,c])=>{
+  // Decorative soft orbs
+  [[-0.3,-0.4,0.22,'#FFD8EC'],[ 0.4,0.2,0.18,'#E4D0FF'],[-0.2,0.5,0.14,'#FFE2F2']].forEach(([dx,dy,r,c])=>{
     const gg = ctx.createRadialGradient(cx+W*dx,cy+H*dy,0,cx+W*dx,cy+H*dy,W*r);
-    gg.addColorStop(0,c+'88'); gg.addColorStop(1,'transparent');
+    gg.addColorStop(0,c+'72'); gg.addColorStop(1,'transparent');
     ctx.fillStyle=gg; ctx.beginPath(); ctx.arc(cx+W*dx,cy+H*dy,W*r,0,Math.PI*2); ctx.fill();
   });
 
